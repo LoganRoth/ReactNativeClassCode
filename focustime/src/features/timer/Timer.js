@@ -10,16 +10,12 @@ import { useKeepAwake } from 'expo-keep-awake';
 
 const DEFAULT_TIME = 0.1;
 
-export const Timer = ({ task, onTimerEnd }) => {
+export const Timer = ({ task, onTimerEnd, onCancel }) => {
   useKeepAwake();
 
   const [minutes, setMinutes] = useState(DEFAULT_TIME);
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(1);
-
-  const onProgress = (progress) => {
-    setProgress(progress);
-  };
 
   const platform_vibrate = () => {
     if (Platform.OS === 'ios') {
@@ -35,7 +31,7 @@ export const Timer = ({ task, onTimerEnd }) => {
     setProgress(1);
     setIsRunning(false);
     platform_vibrate();
-    onTimerEnd()
+    onTimerEnd();
   };
 
   const changeTime = (min) => {
@@ -50,7 +46,7 @@ export const Timer = ({ task, onTimerEnd }) => {
         <CountdownTimer
           minutes={minutes}
           isRunning={isRunning}
-          onProgress={onProgress}
+          onProgress={setProgress}
           onEnd={onEnd}
         />
       </View>
@@ -73,6 +69,9 @@ export const Timer = ({ task, onTimerEnd }) => {
           title={isRunning ? 'Pause' : 'Start'}
           onPress={() => setIsRunning(!isRunning)}
         />
+      </View>
+      <View style={styles.clearSubject}>
+        <RoundedButton title="-" size={50} onPress={onCancel} />
       </View>
     </View>
   );
@@ -118,5 +117,10 @@ const styles = StyleSheet.create({
   },
   progressBarContainer: {
     paddingTop: spacingSizes.md,
+  },
+  clearSubject: {
+    position: 'absolute',
+    bottom: spacingSizes.xxxl,
+    left: spacingSizes.xxl,
   },
 });

@@ -22,16 +22,21 @@ export const CountdownTimer = ({
   const countDown = () => {
     setMillis((time) => {
       if (time === 0) {
-        clearInterval(interval)
-        onEnd()
+        clearInterval(interval);
         return time;
       } else {
         const timeLeft = time - 1000;
-        onProgress(timeLeft / minutesToMillis(minutes));
         return timeLeft;
       }
     });
   };
+
+  useEffect(() => {
+    onProgress(millis / minutesToMillis(minutes));
+    if (millis === 0) {
+      onEnd();
+    }
+  }, [millis]);
 
   useEffect(() => {
     setMillis(minutesToMillis(minutes));
